@@ -1,6 +1,7 @@
 # nokia-funny
 
 A weird text encoder/decoder (no support for binary/unicodes/emojis/special characters because never will)
+Built this in like 2 hours or something lol
 
 ## Locally developing/Running
 
