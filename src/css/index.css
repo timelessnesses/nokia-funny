@@ -1,0 +1,14 @@
+html, body {height:100%;}
+html {display:table; width:100%;}
+body {display:table-cell; text-align:center; vertical-align:middle;background-color: whitesmoke;}
+
+textarea {
+  resize: none;
+}
+
+#error {
+  color: white;
+  visibility: hidden;
+  background-color: red;
+  border:10px solid black;
+}
