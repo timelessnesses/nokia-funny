@@ -23,5 +23,8 @@
 		"@fortawesome/free-regular-svg-icons": "^6.4.0",
 		"@sveltejs/adapter-static": "^2.0.2",
 		"svelte-awesome": "^3.2.0"
+	},
+	"engines": {
+		"node": ">=18.0.0"
 	}
 }
