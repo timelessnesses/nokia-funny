@@ -103,9 +103,6 @@
     }
     let number_to_alphabet = reverse_dict(alphabet_to_number)
 
-    console.log(alphabet_to_number)
-    console.log(number_to_alphabet)
-
     function is_number(text: string) {
         return !isNaN(Number(text)) && text !== " "
     }
