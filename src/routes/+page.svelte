@@ -8,7 +8,7 @@
         [Key: string]: T;
     }
 
-    let alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+    let alphabets = "ABCDEFGHIJKLMNO".split("")
     let numbers = [
         1,2,3,4,5,6,7,8,9,0
     ]
@@ -34,11 +34,11 @@
             number_count = 1
         }
         let x = numbers[number_count - 1].toString()
-        let amount = ""
-        amount += "#" // specialty for uppercase
+        let amount = "" // specialty for uppercase
         for(let i = 0; i < count + 1; i++) {
             amount += x.toString()
         }
+        amount += "##"
         alphabet_to_number[alphabet] = amount
         count++
     })
@@ -70,6 +70,29 @@
 
     alphabet_to_number[" "] = "00"
     alphabet_to_number["+"] = "**"
+    alphabet_to_number["p"] = "77"
+    alphabet_to_number["q"] = "777"
+    alphabet_to_number["r"] = "7777"
+    alphabet_to_number["s"] = "77777"
+    alphabet_to_number["t"] = "88"
+    alphabet_to_number["u"] = "888"
+    alphabet_to_number["v"] = "8888"
+    alphabet_to_number["w"] = "99"
+    alphabet_to_number["x"] = "999"
+    alphabet_to_number["y"] = "9999"
+    alphabet_to_number["z"] = "99999"
+
+    alphabet_to_number["P"] = "77##"
+    alphabet_to_number["Q"] = "777##"
+    alphabet_to_number["R"] = "7777##"
+    alphabet_to_number["S"] = "77777##"
+    alphabet_to_number["T"] = "88##"
+    alphabet_to_number["U"] = "888##"
+    alphabet_to_number["V"] = "8888##"
+    alphabet_to_number["W"] = "99##"
+    alphabet_to_number["X"] = "999##"
+    alphabet_to_number["Y"] = "9999##"
+    alphabet_to_number["Z"] = "99999##"
 
     function reverse_dict(dict: Dictionary<string>) {
         let new_dict: Dictionary<string> = {}
@@ -80,6 +103,9 @@
     }
     let number_to_alphabet = reverse_dict(alphabet_to_number)
 
+    console.log(alphabet_to_number)
+    console.log(number_to_alphabet)
+
     function is_number(text: string) {
         return !isNaN(Number(text)) && text !== " "
     }
@@ -89,8 +115,6 @@
         let encoded = ""
         for(let i = 0; i < text.length; i++) {
             let letter = text[i]
-            console.log(alphabet_to_number[letter])
-            console.log(`"${letter}"`)
             if (is_number(letter)) {
                 encoded += " "+letter
                 continue
@@ -113,12 +137,12 @@
                 decoded += number_to_alphabet[letter]
                 return
             }
-            if (letter[0] === "#") {
-                letter = letter.slice(1)
-                decoded += " " + number_to_alphabet[letter].toUpperCase()
+            if (letter[-1] === "#" && letter[-2] === "#") {
+                letter = letter.slice(0, -2)
+                decoded += number_to_alphabet[letter].toUpperCase()
                 return
             }
-            decoded += " " + number_to_alphabet[letter]
+            decoded += number_to_alphabet[letter]
         })
 
         return decoded
@@ -126,34 +150,36 @@
     let encode_choice: HTMLInputElement
     let decode_choice: HTMLInputElement
     let error_html: HTMLHeadingElement
-    function checker(event: Event) {
-        event.preventDefault()
-        let text = (document.getElementById("text") as HTMLInputElement).value
-        let encoded = ""
-        console.log(text)
-        if (encode_choice.checked) {
-            encoded = encoder(text)
-        } else if (decode_choice.checked) {
-            encoded = decoder(text)
-        }
-        else {
-            error_html.style.visibility = "visible"
-            sleep(2000).then(() => {
-                error_html.style.visibility = "hidden"
-            })
-        }
-        (document.getElementById("result") as HTMLInputElement).value = encoded
-    }
+    let html_box: HTMLTextAreaElement
+    let result_html: HTMLTextAreaElement
+
     function sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+
+    async function checker() {
+        let text = html_box.value
+        let result = ""
+        if (encode_choice.checked) {
+            result = encoder(text)
+        } else {
+            result = decoder(text)
+        }
+        if (result === undefined || result.includes("undefined")) {
+            error_html.style.visibility = "visible"
+            await sleep(2000)
+            error_html.style.visibility = "hidden"
+            result_html.value = ""
+            return
+        }
+        result_html.value = result
+    }
+
     onMount(() => {
         // @ts-ignore
-        encode_choice = document.getElementById("encode") as HTMLInputElement
-        decode_choice = document.getElementById("decode") as HTMLInputElement
-        encode_choice.checked = true
         window.encoder = encoder
         window.decoder = decoder
+        html_box.addEventListener("input", checker)
     })
 
 </script>
@@ -162,15 +188,14 @@
 
 <form on:submit={checker}>
 
-    <textarea id="text" name="text" rows="4" cols="50" placeholder="Text to encode/decode"></textarea><br>
+    <textarea id="text" name="text" rows="4" cols="50" placeholder="Text to encode/decode" bind:this={html_box}></textarea><br>
     <input type="radio" bind:this={encode_choice} value="encode" id="encode" name="choice" checked>
     <label for="encode">Encode</label><br>
     <input type="radio" bind:this={decode_choice} value="decode" id="decode" name="choice">
     <label for="decode">Decode</label><br>
-    <button type="submit" class="btn btn-success">Run!</button>
     <h3 id="error" bind:this={error_html}>Something went wrong. Please try again</h3>
 </form>
 
-<textarea id="result" name="result" rows="4" cols="50" placeholder="Result" readonly></textarea><br>
+<textarea id="result" name="result" rows="4" cols="50" placeholder="Result" readonly bind:this={result_html}></textarea><br>
 
 <a href="https://github.com/timelessnesses/nokia-funny"><Icon data="{faGithub}"/></a>
