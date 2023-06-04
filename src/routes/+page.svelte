@@ -1,7 +1,7 @@
 <script lang="ts">
     import "../css/bootstrap.css"
     import "../css/index.css"
-    import {onMount} from "svelte"
+    import { onMount } from "svelte"
     import { Icon } from "svelte-awesome"
     import { faGithub } from "@fortawesome/free-brands-svg-icons/faGithub"
     interface Dictionary<T> {
@@ -12,10 +12,6 @@
     let numbers = [
         2,3,4,5,6,7,8,9,0
     ]
-
-    interface a {
-        [key: string]: string
-    }
 
     let alphabet_to_number: Dictionary<string> = {}    
     let count = 1
